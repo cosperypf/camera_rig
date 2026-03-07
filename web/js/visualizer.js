@@ -27,7 +27,7 @@ class CameraRigVisualizer {
         this.controls.minDistance = 0.05;
         this.controls.maxDistance = 2;
         this.controls.target.set(0, 0, 0);
-        this.controls.enableRotate = false;
+        this.controls.enableRotate = true;
         this.controls.update();
         
         this.initialView = {
@@ -140,54 +140,63 @@ class CameraRigVisualizer {
 
     setupKeyboardControls() {
         this.keyState = {};
-        this.moveSpeed = 0.005;
-        this.rotateSpeed = 0.03;
         
         const canvasContainer = this.container;
         canvasContainer.setAttribute('tabindex', '0');
         
         canvasContainer.addEventListener('keydown', (e) => {
-            console.log('keydown:', e.code);
             this.keyState[e.code] = true;
         });
         
         canvasContainer.addEventListener('keyup', (e) => {
-            console.log('keyup:', e.code);
             this.keyState[e.code] = false;
         });
         
         canvasContainer.addEventListener('click', () => {
             canvasContainer.focus();
-            console.log('Canvas focused');
-        });
-        
-        canvasContainer.addEventListener('focus', () => {
-            console.log('Canvas has focus');
-        });
-        
-        canvasContainer.addEventListener('blur', () => {
-            console.log('Canvas lost focus');
         });
     }
 
     updateKeyboardMovement() {
         if (!this.keyState) return;
         
-        const rotateSpeed = 0.03;
-        const rollSpeed = 0.02;
+        const hasInput = Object.values(this.keyState).some(v => v);
+        if (!hasInput) return;
         
+        const rotateSpeed = 0.02;
+        const rollSpeed = 0.015;
+        
+        // 获取当前球坐标
+        const offset = this.camera.position.clone().sub(this.controls.target);
+        const spherical = new THREE.Spherical();
+        spherical.setFromVector3(offset);
+        
+        // WS: 上下旋转 (phi)
         if (this.keyState['KeyW']) {
-            this.spherical.phi -= rotateSpeed;
+            spherical.phi -= rotateSpeed;
         }
         if (this.keyState['KeyS']) {
-            this.spherical.phi += rotateSpeed;
+            spherical.phi += rotateSpeed;
         }
+        
+        // AD: 左右旋转 (theta)
         if (this.keyState['KeyA']) {
-            this.spherical.theta -= rotateSpeed;
+            spherical.theta -= rotateSpeed;
         }
         if (this.keyState['KeyD']) {
-            this.spherical.theta += rotateSpeed;
+            spherical.theta += rotateSpeed;
         }
+        
+        // 限制 phi 范围
+        spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+        
+        // 更新相机位置
+        const newPos = new THREE.Vector3();
+        newPos.setFromSpherical(spherical);
+        this.camera.position.copy(this.controls.target).add(newPos);
+        this.camera.lookAt(this.controls.target);
+        
+        // QE: 滚转
         if (this.keyState['KeyQ']) {
             this.rollAngle += rollSpeed;
         }
@@ -195,20 +204,12 @@ class CameraRigVisualizer {
             this.rollAngle -= rollSpeed;
         }
         
-        this.spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, this.spherical.phi));
-        
-        const offset = new THREE.Vector3();
-        offset.setFromSpherical(this.spherical);
-        this.camera.position.copy(this.controls.target).add(offset);
-        this.camera.lookAt(this.controls.target);
-        
+        // 更新相机 up 向量实现滚转
         const quaternion = new THREE.Quaternion();
         quaternion.setFromEuler(new THREE.Euler(0, 0, this.rollAngle, 'XYZ'));
         const upOffset = new THREE.Vector3(0, 1, 0);
         upOffset.applyQuaternion(quaternion);
         this.camera.up.copy(upOffset);
-        
-        this.controls.update();
     }
 
     loadRig(rigData) {
@@ -646,8 +647,8 @@ class CameraRigVisualizer {
 
     animate() {
         requestAnimationFrame(() => this.animate());
-        this.controls.update();
         this.updateKeyboardMovement();
+        this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }
 

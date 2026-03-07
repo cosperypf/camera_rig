@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DeviceConfiguration deviceUID="450F3T008G00000">
+    <Camera cam_name="trackingA" name="trackingA" id="0">
+        <Calibration size="640 480 " principal_point="320.734285 237.339629 " focal_length="214.404216 215.371914 " model="FISHEYE_4_PARAMETERS" radial_distortion="0.439905568 -0.337965972 0.106343853 -0.010807713 0 0 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="0.000000000 0.000000000 0.000000000 " rowMajorRotationMat="1.000000000 0.000000000 0.000000000 0.000000000 1.000000000 0.000000000 0.000000000 0.000000000 1.000000000 "/>
+        <TimeAlignment delta="0.003436"/>
+        <CaptureDetails nativeSensorWidth="640" nativeSensorHeight="480" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="320.734285 237.339629 " normalizer="400" coeffs="-1.1489292 1.4186657 -1.1576116 "/>
+    </Camera>
+    <Camera cam_name="trackingB" name="trackingB" id="1">
+        <Calibration size="640 480 " principal_point="317.861592 238.219914 " focal_length="214.075426 214.896497 " model="FISHEYE_4_PARAMETERS" radial_distortion="0.433584683 -0.329019467 0.099991883 -0.009204555 0 0 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="0.004842146 0.090685139 -0.021427897 " rowMajorRotationMat="0.998594719 0.052964735 0.001823233 -0.048886582 0.907331387 0.417564194 0.020461901 -0.417066530 0.908645596 "/>
+        <TimeAlignment delta="0.003448"/>
+        <CaptureDetails nativeSensorWidth="640" nativeSensorHeight="480" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="317.861592 238.219914 " normalizer="400" coeffs="-1.1489292 1.4186657 -1.1576116 "/>
+    </Camera>
+    <Camera cam_name="ctrl-trackingA" name="ctrl-trackingA" id="2">
+        <Calibration size="640 480 " principal_point="317.632935 239.455359 " focal_length="214.438341 215.543803 " model="FISHEYE_4_PARAMETERS" radial_distortion="0.442677996 -0.341648370 0.109131839 -0.011154513 0 0 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="0.009051130 -0.027048296 -0.009609678 " rowMajorRotationMat="0.998008649 -0.060942356 0.016271644 0.060035985 0.838606338 -0.541419514 0.019349877 0.541318242 0.840595113 "/>
+        <TimeAlignment delta="0.003426"/>
+        <CaptureDetails nativeSensorWidth="640" nativeSensorHeight="480" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="317.632935 239.455359 " normalizer="400" coeffs="-1.1489292 1.4186657 -1.1576116 "/>
+    </Camera>
+    <Camera cam_name="ctrl-trackingB" name="ctrl-trackingB" id="3">
+        <Calibration size="640 480 " principal_point="317.256320 241.016171 " focal_length="214.501033 215.454626 " model="FISHEYE_4_PARAMETERS" radial_distortion="0.439680579 -0.339434251 0.109017451 -0.011361668 0 0 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="0.014984215 0.091028791 -0.073964441 " rowMajorRotationMat="0.994108010 0.099316403 0.043422537 -0.089831528 0.530687926 0.842793345 0.060659387 -0.841728327 0.536482862 "/>
+        <TimeAlignment delta="0.003475"/>
+        <CaptureDetails nativeSensorWidth="640" nativeSensorHeight="480" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="317.256320 241.016171 " normalizer="400" coeffs="-1.1489292 1.4186657 -1.1576116 "/>
+    </Camera>
+    <Camera cam_name="add-trackingA" name="add-trackingA" id="4">
+        <Calibration size="640 480 " principal_point="318.383879 239.908228 " focal_length="214.536690 214.531500 " model="FISHEYE_4_PARAMETERS" radial_distortion="0.435088281 -0.329950207 0.097043822 -0.006849012 0 0 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="-0.021209667 0.012152172 -0.023386883 " rowMajorRotationMat="0.269873708 0.202661050 -0.941327085 -0.028936437 0.978865636 0.202446904 0.962460838 -0.027396444 0.270034388 "/>
+        <TimeAlignment delta="0.003429"/>
+        <CaptureDetails nativeSensorWidth="640" nativeSensorHeight="480" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="318.383879 239.908228 " normalizer="400" coeffs="-1.1489292 1.4186657 -1.1576116 "/>
+    </Camera>
+    <Camera cam_name="add-trackingB" name="add-trackingB" id="5">
+        <Calibration size="640 480 " principal_point="317.383152 242.482549 " focal_length="214.826700 214.774819 " model="FISHEYE_4_PARAMETERS" radial_distortion="0.431699984 -0.317629833 0.083016677 -0.001516022 0 0 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="-0.021143955 0.078025066 -0.022780572 " rowMajorRotationMat="0.265508539 0.211212615 -0.940688283 -0.026181343 0.976927630 0.211959767 0.963752952 -0.031648645 0.264912458 "/>
+        <TimeAlignment delta="0.003421"/>
+        <CaptureDetails nativeSensorWidth="640" nativeSensorHeight="480" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="317.383152 242.482549 " normalizer="400" coeffs="-1.1489292 1.4186657 -1.1576116 "/>
+    </Camera>
+    <Camera cam_name="rgb-left" name="rgb-left" id="6">
+        <Calibration size="2460 2460 " principal_point="1232.596404 1235.738687 " focal_length="1253.590495 1253.630936 " model="RADIAL_6_PARAMETERS" radial_distortion="2.485530464 -0.159636397 -0.019202153 2.976549053 0.373564596 -0.091330116 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="0.000720183 -0.015788535 -0.002024048 " rowMajorRotationMat="-0.998835974 -0.026770544 -0.040125238 0.034844549 -0.975674163 -0.216438869 -0.033354972 -0.217585075 0.975471261 "/>
+        <RollingShutter isRollingShutter="true" linetime="3.800000e-06"/>
+        <TimeAlignment delta="0.008000"/>
+        <CaptureDetails nativeSensorWidth="2460" nativeSensorHeight="2460" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="1232.596404 1235.738687 " normalizer="1739.482682" coeffs="-0.40743701 -0.10724918 -0.27551027 "/>
+    </Camera>
+    <Camera cam_name="rgb-right" name="rgb-right" id="7">
+        <Calibration size="2460 2460 " principal_point="1239.795842 1233.933091 " focal_length="1250.111380 1251.613078 " model="RADIAL_6_PARAMETERS" radial_distortion="2.534928649 -0.040879985 -0.012723119 3.025797737 0.517589042 -0.058979985 " distortion_limit="3.6" undistortion_limit="1.3"/>
+        <Rig translation="-0.000639381 -0.079916385 -0.004107963 " rowMajorRotationMat="-0.998826441 -0.029512906 -0.038402207 0.037169121 -0.975439578 -0.217108467 -0.031051531 -0.218281053 0.975391811 "/>
+        <RollingShutter isRollingShutter="true" linetime="3.800000e-06"/>
+        <TimeAlignment delta="0.007991"/>
+        <CaptureDetails nativeSensorWidth="2460" nativeSensorHeight="2460" cropL="0" cropR="0" cropT="0" cropB="0" binningH="1" binningV="1"/>
+        <VignettingCorrection model="RADIAL_POLYNOMIAL" center="1239.795842 1233.933091 " normalizer="1739.482682" coeffs="-0.40743701 -0.10724918 -0.27551027 "/>
+    </Camera>
+    <Image format="interleaved"/>
+    <SFConfig>
+        <Stateinit ombc="0.051144120 -3.089531348 -0.336075092 " tbc="-0.003884141 0.044687412 -0.013093027 " aBias="-0.035762182 0.020122766 0.242653297 " wBias="-0.027440234 -0.014432813 0.021594813 " ka="-0.000422110 -0.001257897 -0.001844546 " kg="-0.004585660 -0.005833375 -0.003102808 " na="0.000043592 0.000153019 0.000838236 " ng="0.001540213 0.004779003 -0.001403879 " ombg="0.002092310 0.002386988 -0.000744146 " accelDelta="0.0" delta="0.003436"/>
+        <IMUNoise movingAccelNoise="0.442166" movingGyroNoise="0.018163"/>
+    </SFConfig>
+</DeviceConfiguration>
+
+<!--2025-04-09 10:36:03-->
+<!--Reproj error(featured image ratio, cam only, cam-imu, feature num): 
+Rolling shutter camera line time is fixed setting, not calibrated.
+Cam_0: 300/300, 0.272003, 0.275257, 141718
+Cam_1: 300/300, 0.294276, 0.296329, 138062
+Cam_2: 300/300, 0.268741, 0.271384, 121743
+Cam_3: 300/300, 0.248832, 0.253573, 110725
+Cam_4: 300/300, 0.167163, 0.174798, 106592
+Cam_5: 300/300, 0.291815, 0.306815, 103932
+Cam_6: 300/300, 0.992080, 1.104782, 127593
+Cam_7: 300/300, 0.722034, 0.841818, 129727
+-->
+<!--Structural design diff.
+Cam_0: 0.645668deg, 0.839284mm
+Cam_1: 0.667874deg, 4.300598mm
+Cam_2: 0.442867deg, 3.203720mm
+Cam_3: 1.105116deg, 3.363883mm
+Cam_4: 0.820045deg, 2.283968mm
+Cam_5: 0.670425deg, 3.287150mm
+Cam_6: 0.262672deg, 1.758966mm
+Cam_7: 0.190457deg, 3.176207mm
+-->

@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    overflow: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+.header-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+.btn-primary {
+    background: #2196F3;
+    border-color: #2196F3;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1976D2;
+}
+
+.btn-secondary {
+    width: 100%;
+    margin-top: 8px;
+}
+
+main {
+    display: flex;
+    height: calc(100vh - 52px);
+}
+
+#canvas-container {
+    flex: 1;
+    background: #fafafa;
+    position: relative;
+}
+
+#canvas-container canvas {
+    display: block;
+}
+
+#controls {
+    width: 280px;
+    background: white;
+    border-left: 1px solid #e0e0e0;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.panel {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.panel:last-child {
+    border-bottom: none;
+}
+
+.panel h3 {
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+.input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.input-row input {
+    flex: 1;
+    text-align: center;
+}
+
+#legend {
+    font-size: 13px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.legend-line {
+    width: 20px;
+    height: 3px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+#deviceList {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.device-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.device-item:hover {
+    background: #f0f0f0;
+}
+
+.device-item button.delete-btn {
+    padding: 2px 8px;
+    border: none;
+    background: #ff5252;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.device-item button.delete-btn:hover {
+    background: #f44336;
+}
+
+#editDeviceSelect {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+#editDeviceSelect:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+.camera-params {
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    border: 1px solid #eee;
+}
+
+.upload-hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #999;
+}
+
+.upload-hint p {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+#canvas-container.has-data .upload-hint {
+    display: none;
+}

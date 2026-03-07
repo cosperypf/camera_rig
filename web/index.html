@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Rig Visualization</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="error-message" style="display:none; position:fixed; top:60px; right:20px; background:#ff5252; color:white; padding:16px; border-radius:4px; z-index:1000; max-width:400px;"></div>
+    
+    <header>
+        <h1>Camera Rig Visualization</h1>
+        <div class="header-controls">
+            <input type="file" id="fileInput" accept=".xml" style="display: none;">
+            <button id="uploadBtn" class="btn">Upload XML</button>
+            <button id="exportBtn" class="btn btn-primary">Export XML</button>
+        </div>
+    </header>
+    
+    <main>
+        <div id="canvas-container">
+            <div class="upload-hint">
+                <p>Click "Upload XML" to load device_calibration.xml</p>
+            </div>
+        </div>
+        
+        <aside id="controls">
+            <div class="panel">
+                <h3>Controls</h3>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="showFrustum" checked>
+                    <span>Show Frustum</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="worldOnly">
+                    <span>World Only</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="showCoords">
+                    <span>Show Coordinates</span>
+                </label>
+                <button id="resetView" class="btn btn-secondary">Reset View</button>
+            </div>
+            
+            <div class="panel">
+                <h3>Legend</h3>
+                <div id="legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: black;"></span>
+                        <span>World Origin</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: orange;"></span>
+                        <span>FishEye Camera</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: dodgerblue;"></span>
+                        <span>RGB Camera</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: purple;"></span>
+                        <span>Virtual Camera</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: cyan;"></span>
+                        <span>IMU</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-line" style="background: red;"></span>
+                        <span>X Axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-line" style="background: green;"></span>
+                        <span>Y Axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-line" style="background: blue;"></span>
+                        <span>Z Axis</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Add Virtual Device</h3>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="deviceName" placeholder="e.g. front_view">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="deviceType">
+                        <option value="axis_only">Axis Only</option>
+                        <option value="camera">Camera</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Translation (m)</label>
+                    <div class="input-row">
+                        <input type="number" id="transX" step="0.001" placeholder="X" value="0">
+                        <input type="number" id="transY" step="0.001" placeholder="Y" value="0">
+                        <input type="number" id="transZ" step="0.001" placeholder="Z" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Rotation (degrees)</label>
+                    <div class="input-row">
+                        <input type="number" id="rotRoll" step="1" placeholder="Roll" value="0">
+                        <input type="number" id="rotPitch" step="1" placeholder="Pitch" value="0">
+                        <input type="number" id="rotYaw" step="1" placeholder="Yaw" value="0">
+                    </div>
+                </div>
+                <div id="cameraParams" class="camera-params" style="display:none;">
+                    <div class="form-group">
+                        <label>Focal Length (px)</label>
+                        <div class="input-row">
+                            <input type="number" id="focalX" step="1" placeholder="fx" value="200">
+                            <input type="number" id="focalY" step="1" placeholder="fy" value="200">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Principal Point (px)</label>
+                        <div class="input-row">
+                            <input type="number" id="principalX" step="1" placeholder="cx" value="320">
+                            <input type="number" id="principalY" step="1" placeholder="cy" value="240">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Resolution (px)</label>
+                        <div class="input-row">
+                            <input type="number" id="imgWidth" step="1" placeholder="Width" value="640">
+                            <input type="number" id="imgHeight" step="1" placeholder="Height" value="480">
+                        </div>
+                    </div>
+                </div>
+                <button id="addDevice" class="btn btn-primary">Add Device</button>
+            </div>
+            
+            <div class="panel">
+                <h3>Edit Virtual Device</h3>
+                <div class="form-group">
+                    <label>Select Device</label>
+                    <select id="editDeviceSelect">
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="editDeviceType">
+                        <option value="axis_only">Axis Only</option>
+                        <option value="camera">Camera</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Translation (m)</label>
+                    <div class="input-row">
+                        <input type="number" id="editTransX" step="0.001" placeholder="X" value="0">
+                        <input type="number" id="editTransY" step="0.001" placeholder="Y" value="0">
+                        <input type="number" id="editTransZ" step="0.001" placeholder="Z" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Rotation (degrees)</label>
+                    <div class="input-row">
+                        <input type="number" id="editRotRoll" step="1" placeholder="Roll" value="0">
+                        <input type="number" id="editRotPitch" step="1" placeholder="Pitch" value="0">
+                        <input type="number" id="editRotYaw" step="1" placeholder="Yaw" value="0">
+                    </div>
+                </div>
+                <div id="editCameraParams" class="camera-params" style="display:none;">
+                    <div class="form-group">
+                        <label>Focal Length (px)</label>
+                        <div class="input-row">
+                            <input type="number" id="editFocalX" step="1" placeholder="fx" value="200">
+                            <input type="number" id="editFocalY" step="1" placeholder="fy" value="200">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Principal Point (px)</label>
+                        <div class="input-row">
+                            <input type="number" id="editPrincipalX" step="1" placeholder="cx" value="320">
+                            <input type="number" id="editPrincipalY" step="1" placeholder="cy" value="240">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Resolution (px)</label>
+                        <div class="input-row">
+                            <input type="number" id="editImgWidth" step="1" placeholder="Width" value="640">
+                            <input type="number" id="editImgHeight" step="1" placeholder="Height" value="480">
+                        </div>
+                    </div>
+                </div>
+                <button id="updateDevice" class="btn btn-primary">Update Device</button>
+            </div>
+            
+            <div class="panel">
+                <h3>Devices</h3>
+                <div id="deviceList"></div>
+            </div>
+        </aside>
+    </main>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/exporter.js"></script>
+    <script src="js/visualizer.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

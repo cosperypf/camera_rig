@@ -104,6 +104,74 @@ main {
     letter-spacing: 0.5px;
 }
 
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.camera-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.btn-close:hover {
+    color: #333;
+}
+
+.info-section {
+    margin-bottom: 12px;
+    padding: 8px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-size: 12px;
+    color: #333;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.info-value.rotation-matrix {
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.info-row span:last-child {
+    color: #333;
+    font-family: monospace;
+}
+
 .checkbox-label {
     display: flex;
     align-items: center;

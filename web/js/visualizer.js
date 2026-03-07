@@ -55,9 +55,14 @@ class CameraRigVisualizer {
         this.coordLabels = new Map();
         this.coordTexts = new Map();
         
+        this.selectedCamera = null;
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+        
         this.setupLights();
         this.setupWorldAxes();
         this.setupResize();
+        this.setupClickSelect();
         
         this.animate();
     }
@@ -135,6 +140,98 @@ class CameraRigVisualizer {
             this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        });
+    }
+
+    setupClickSelect() {
+        this.container.addEventListener('click', (event) => {
+            const rect = this.container.getBoundingClientRect();
+            this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+            
+            const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+            
+            for (let hit of intersects) {
+                let obj = hit.object;
+                while (obj.parent && obj.parent !== this.scene) {
+                    obj = obj.parent;
+                }
+                
+                for (const [name, helper] of this.cameraHelpers) {
+                    if (obj === helper || obj.userData.isCameraPoint) {
+                        this.selectCamera(name);
+                        return;
+                    }
+                }
+            }
+        });
+    }
+
+    selectCamera(name) {
+        this.selectedCamera = name;
+        
+        this.cameraHelpers.forEach((helper, camName) => {
+            const isSelected = camName === name;
+            helper.traverse((child) => {
+                if (child.material) {
+                    child.material.transparent = !isSelected;
+                    child.material.opacity = isSelected ? 1 : 0.2;
+                }
+            });
+            
+            const frustum = this.frustumHelpers.get(camName);
+            if (frustum) {
+                frustum.visible = isSelected;
+            }
+            
+            const label = this.cameraLabels.get(camName);
+            if (label) {
+                label.visible = isSelected;
+            }
+            
+            const coordLabel = this.coordLabels.get(camName);
+            if (coordLabel) {
+                coordLabel.visible = isSelected && this.showCoordinates;
+            }
+        });
+        
+        const cameraData = this.cameras.find(c => c.name === name) || 
+                          this.virtualDevices.find(d => d.name === name);
+        
+        if (cameraData) {
+            this.onCameraSelected(name, cameraData);
+        }
+    }
+
+    onCameraSelected(name, data) {
+        const event = new CustomEvent('cameraSelected', { 
+            detail: { name, data } 
+        });
+        document.dispatchEvent(event);
+    }
+
+    clearSelection() {
+        this.selectedCamera = null;
+        
+        this.cameraHelpers.forEach((helper, name) => {
+            helper.traverse((child) => {
+                if (child.material) {
+                    child.material.transparent = false;
+                    child.material.opacity = 1;
+                }
+            });
+            
+            const frustum = this.frustumHelpers.get(name);
+            if (frustum) {
+                frustum.visible = this.showFrustum;
+            }
+            
+            const label = this.cameraLabels.get(name);
+            if (label) {
+                label.visible = true;
+            }
         });
     }
 
@@ -284,6 +381,7 @@ class CameraRigVisualizer {
         const pointGeom = new THREE.SphereGeometry(0.003, 16, 16);
         const pointMat = new THREE.MeshBasicMaterial({ color: pointColor });
         const point = new THREE.Mesh(pointGeom, pointMat);
+        point.userData.isCameraPoint = true;
         helper.add(point);
         
         this.scene.add(helper);

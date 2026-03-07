@@ -33,6 +33,47 @@
         </div>
         
         <aside id="controls">
+            <div class="panel" id="cameraInfoPanel" style="display:none;">
+                <h3>Camera Info</h3>
+                <div class="info-header">
+                    <span id="selectedCameraName" class="camera-name"></span>
+                    <button id="clearSelection" class="btn-close">×</button>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">Type</div>
+                    <div id="cameraModel" class="info-value"></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">Position (m)</div>
+                    <div id="cameraPosition" class="info-value"></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">Rotation Matrix</div>
+                    <div id="cameraRotation" class="info-value rotation-matrix"></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">Intrinsics</div>
+                    <div class="info-row">
+                        <span>Focal:</span> <span id="cameraFocal"></span>
+                    </div>
+                    <div class="info-row">
+                        <span>Principal:</span> <span id="cameraPrincipal"></span>
+                    </div>
+                    <div class="info-row">
+                        <span>Resolution:</span> <span id="cameraResolution"></span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">FOV</div>
+                    <div class="info-row">
+                        <span>Horizontal:</span> <span id="cameraFovH"></span>
+                    </div>
+                    <div class="info-row">
+                        <span>Vertical:</span> <span id="cameraFovV"></span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="panel">
                 <h3>Controls</h3>
                 <label class="checkbox-label">

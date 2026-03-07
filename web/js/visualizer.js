@@ -155,13 +155,16 @@ class CameraRigVisualizer {
             
             for (let hit of intersects) {
                 let obj = hit.object;
-                while (obj.parent && obj.parent !== this.scene) {
-                    obj = obj.parent;
+                
+                if (obj.userData.cameraName) {
+                    this.selectCamera(obj.userData.cameraName);
+                    return;
                 }
                 
-                for (const [name, helper] of this.cameraHelpers) {
-                    if (obj === helper || obj.userData.isCameraPoint) {
-                        this.selectCamera(name);
+                while (obj.parent && obj.parent !== this.scene) {
+                    obj = obj.parent;
+                    if (obj.userData.cameraName) {
+                        this.selectCamera(obj.userData.cameraName);
                         return;
                     }
                 }
@@ -371,17 +374,18 @@ class CameraRigVisualizer {
         
         const helper = new THREE.Group();
         helper.position.copy(position);
-        helper.userData = { isVirtual: false };
+        helper.userData = { isVirtual: false, cameraName: camera.name };
         
         const axesLength = 0.022;
         const axesHelper = new THREE.AxesHelper(axesLength);
+        axesHelper.userData.cameraName = camera.name;
         helper.add(axesHelper);
         
         const pointColor = camera.model.startsWith('FISHEYE') ? 0xffa500 : 0x1e90ff;
         const pointGeom = new THREE.SphereGeometry(0.003, 16, 16);
         const pointMat = new THREE.MeshBasicMaterial({ color: pointColor });
         const point = new THREE.Mesh(pointGeom, pointMat);
-        point.userData.isCameraPoint = true;
+        point.userData = { isCameraPoint: true, cameraName: camera.name };
         helper.add(point);
         
         this.scene.add(helper);
@@ -390,11 +394,13 @@ class CameraRigVisualizer {
         
         const labelPos = new THREE.Vector3(position.x, position.y + 0.012, position.z);
         const label = this.addLabel(camera.name, labelPos, pointColor === 0xffa500 ? '#ff6600' : '#0066cc');
+        label.userData.cameraName = camera.name;
         this.cameraLabels.set(camera.name, label);
         
         const coordText = `(X:${position.x.toFixed(3)} Y:${position.y.toFixed(3)} Z:${position.z.toFixed(3)})`;
         const coordPos = new THREE.Vector3(position.x, position.y - 0.015, position.z);
         const coordSprite = this.addCoordSprite(coordText, coordPos);
+        coordSprite.userData.cameraName = camera.name;
         this.coordLabels.set(camera.name, coordSprite);
         this.coordTexts.set(camera.name, coordText);
         
@@ -403,6 +409,7 @@ class CameraRigVisualizer {
 
     addFrustum(camera) {
         const frustum = new THREE.Group();
+        frustum.userData.cameraName = camera.name;
         
         const position = new THREE.Vector3(...camera.translation);
         const rotation = camera.rotation;
@@ -454,12 +461,14 @@ class CameraRigVisualizer {
             const points = [position, corner];
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
             const line = new THREE.Line(geometry, material);
+            line.userData.cameraName = camera.name;
             frustum.add(line);
         });
         
         for (let i = 0; i < 4; i++) {
             const geometry = new THREE.BufferGeometry().setFromPoints([corners[i], corners[(i+1)%4]]);
             const line = new THREE.Line(geometry, material);
+            line.userData.cameraName = camera.name;
             frustum.add(line);
         }
         
@@ -503,16 +512,18 @@ class CameraRigVisualizer {
         
         const helper = new THREE.Group();
         helper.position.copy(position);
-        helper.userData = { isVirtual: true, type: device.type };
+        helper.userData = { isVirtual: true, type: device.type, cameraName: device.name };
         
         const axesLength = 0.022;
         const axesHelper = new THREE.AxesHelper(axesLength);
+        axesHelper.userData.cameraName = device.name;
         helper.add(axesHelper);
         
         if (device.type === 'camera') {
             const pointGeom = new THREE.SphereGeometry(0.003, 16, 16);
             const pointMat = new THREE.MeshBasicMaterial({ color: 0x800080 });
             const point = new THREE.Mesh(pointGeom, pointMat);
+            point.userData = { isCameraPoint: true, cameraName: device.name };
             helper.add(point);
             this.cameraPoints.set(device.name, point);
         }
@@ -522,11 +533,13 @@ class CameraRigVisualizer {
         
         const labelPos = new THREE.Vector3(position.x, position.y + 0.012, position.z);
         const label = this.addLabel(device.name, labelPos, '#660099');
+        label.userData.cameraName = device.name;
         this.cameraLabels.set(device.name, label);
         
         const coordText = `(X:${position.x.toFixed(3)} Y:${position.y.toFixed(3)} Z:${position.z.toFixed(3)})`;
         const coordPos = new THREE.Vector3(position.x, position.y - 0.015, position.z);
         const coordSprite = this.addCoordSprite(coordText, coordPos);
+        coordSprite.userData.cameraName = device.name;
         this.coordLabels.set(device.name, coordSprite);
         this.coordTexts.set(device.name, coordText);
         

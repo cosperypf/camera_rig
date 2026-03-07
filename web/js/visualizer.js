@@ -146,14 +146,6 @@ class CameraRigVisualizer {
         document.addEventListener('keyup', (e) => {
             this.keyState[e.code] = false;
         });
-        
-        this.scene.addEventListener('keydown', (e) => {
-            this.keyState[e.code] = true;
-        });
-        
-        this.scene.addEventListener('keyup', (e) => {
-            this.keyState[e.code] = false;
-        });
     }
 
     updateKeyboardMovement() {

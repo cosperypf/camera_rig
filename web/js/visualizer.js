@@ -139,12 +139,19 @@ class CameraRigVisualizer {
         this.moveSpeed = 0.005;
         this.rotateSpeed = 0.03;
         
-        document.addEventListener('keydown', (e) => {
+        const canvasContainer = this.container;
+        canvasContainer.setAttribute('tabindex', '0');
+        
+        canvasContainer.addEventListener('keydown', (e) => {
             this.keyState[e.code] = true;
         });
         
-        document.addEventListener('keyup', (e) => {
+        canvasContainer.addEventListener('keyup', (e) => {
             this.keyState[e.code] = false;
+        });
+        
+        canvasContainer.addEventListener('click', () => {
+            canvasContainer.focus();
         });
     }
 

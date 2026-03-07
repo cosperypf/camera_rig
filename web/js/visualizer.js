@@ -14,7 +14,7 @@ class CameraRigVisualizer {
             0.001,
             1000
         );
-        this.camera.position.set(0, 0.15, 0.15);
+        this.camera.position.set(0.15, 0.1, 0);
         
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(container.clientWidth, container.clientHeight);
@@ -30,9 +30,11 @@ class CameraRigVisualizer {
         this.controls.update();
         
         this.initialView = {
-            position: this.camera.position.clone(),
-            target: this.controls.target.clone()
+            position: new THREE.Vector3(0.15, 0.1, 0),
+            target: new THREE.Vector3(0, 0, 0)
         };
+        
+        this.setupKeyboardControls();
         
         this.cameras = [];
         this.imu = null;
@@ -130,6 +132,69 @@ class CameraRigVisualizer {
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
         });
+    }
+
+    setupKeyboardControls() {
+        this.keyState = {};
+        this.moveSpeed = 0.005;
+        this.rotateSpeed = 0.03;
+        
+        document.addEventListener('keydown', (e) => {
+            this.keyState[e.code] = true;
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            this.keyState[e.code] = false;
+        });
+        
+        this.scene.addEventListener('keydown', (e) => {
+            this.keyState[e.code] = true;
+        });
+        
+        this.scene.addEventListener('keyup', (e) => {
+            this.keyState[e.code] = false;
+        });
+    }
+
+    updateKeyboardMovement() {
+        if (!this.keyState) return;
+        
+        const direction = new THREE.Vector3();
+        const right = new THREE.Vector3();
+        
+        const forward = new THREE.Vector3(0, 0, -1);
+        forward.applyQuaternion(this.camera.quaternion);
+        forward.y = 0;
+        forward.normalize();
+        
+        right.crossVectors(forward, new THREE.Vector3(0, 1, 0));
+        
+        if (this.keyState['KeyW'] || this.keyState['ArrowUp']) {
+            this.camera.position.addScaledVector(forward, this.moveSpeed);
+            this.controls.target.addScaledVector(forward, this.moveSpeed);
+        }
+        if (this.keyState['KeyS'] || this.keyState['ArrowDown']) {
+            this.camera.position.addScaledVector(forward, -this.moveSpeed);
+            this.controls.target.addScaledVector(forward, -this.moveSpeed);
+        }
+        if (this.keyState['KeyA'] || this.keyState['ArrowLeft']) {
+            this.camera.position.addScaledVector(right, -this.moveSpeed);
+            this.controls.target.addScaledVector(right, -this.moveSpeed);
+        }
+        if (this.keyState['KeyD'] || this.keyState['ArrowRight']) {
+            this.camera.position.addScaledVector(right, this.moveSpeed);
+            this.controls.target.addScaledVector(right, this.moveSpeed);
+        }
+        if (this.keyState['KeyQ']) {
+            this.camera.position.y -= this.moveSpeed;
+            this.controls.target.y -= this.moveSpeed;
+        }
+        if (this.keyState['KeyE']) {
+            this.camera.position.y += this.moveSpeed;
+            this.controls.target.y += this.moveSpeed;
+        }
+        
+        this.controls.update();
     }
 
     loadRig(rigData) {
@@ -565,6 +630,7 @@ class CameraRigVisualizer {
     animate() {
         requestAnimationFrame(() => this.animate());
         this.controls.update();
+        this.updateKeyboardMovement();
         this.renderer.render(this.scene, this.camera);
     }
 

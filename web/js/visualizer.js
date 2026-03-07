@@ -14,7 +14,7 @@ class CameraRigVisualizer {
             0.001,
             1000
         );
-        this.camera.position.set(0.15, 0.1, 0);
+        this.camera.position.set(0, 0, 0.2);
         
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(container.clientWidth, container.clientHeight);
@@ -27,12 +27,16 @@ class CameraRigVisualizer {
         this.controls.minDistance = 0.05;
         this.controls.maxDistance = 2;
         this.controls.target.set(0, 0, 0);
+        this.controls.enableRotate = false;
         this.controls.update();
         
         this.initialView = {
-            position: new THREE.Vector3(0.15, 0.1, 0),
+            position: new THREE.Vector3(0, 0, 0.2),
             target: new THREE.Vector3(0, 0, 0)
         };
+        
+        this.spherical = new THREE.Spherical(0.2, Math.PI / 2, 0);
+        this.rollAngle = 0;
         
         this.setupKeyboardControls();
         
@@ -143,55 +147,66 @@ class CameraRigVisualizer {
         canvasContainer.setAttribute('tabindex', '0');
         
         canvasContainer.addEventListener('keydown', (e) => {
+            console.log('keydown:', e.code);
             this.keyState[e.code] = true;
         });
         
         canvasContainer.addEventListener('keyup', (e) => {
+            console.log('keyup:', e.code);
             this.keyState[e.code] = false;
         });
         
         canvasContainer.addEventListener('click', () => {
             canvasContainer.focus();
+            console.log('Canvas focused');
+        });
+        
+        canvasContainer.addEventListener('focus', () => {
+            console.log('Canvas has focus');
+        });
+        
+        canvasContainer.addEventListener('blur', () => {
+            console.log('Canvas lost focus');
         });
     }
 
     updateKeyboardMovement() {
         if (!this.keyState) return;
         
-        const direction = new THREE.Vector3();
-        const right = new THREE.Vector3();
+        const rotateSpeed = 0.03;
+        const rollSpeed = 0.02;
         
-        const forward = new THREE.Vector3(0, 0, -1);
-        forward.applyQuaternion(this.camera.quaternion);
-        forward.y = 0;
-        forward.normalize();
-        
-        right.crossVectors(forward, new THREE.Vector3(0, 1, 0));
-        
-        if (this.keyState['KeyW'] || this.keyState['ArrowUp']) {
-            this.camera.position.addScaledVector(forward, this.moveSpeed);
-            this.controls.target.addScaledVector(forward, this.moveSpeed);
+        if (this.keyState['KeyW']) {
+            this.spherical.phi -= rotateSpeed;
         }
-        if (this.keyState['KeyS'] || this.keyState['ArrowDown']) {
-            this.camera.position.addScaledVector(forward, -this.moveSpeed);
-            this.controls.target.addScaledVector(forward, -this.moveSpeed);
+        if (this.keyState['KeyS']) {
+            this.spherical.phi += rotateSpeed;
         }
-        if (this.keyState['KeyA'] || this.keyState['ArrowLeft']) {
-            this.camera.position.addScaledVector(right, -this.moveSpeed);
-            this.controls.target.addScaledVector(right, -this.moveSpeed);
+        if (this.keyState['KeyA']) {
+            this.spherical.theta -= rotateSpeed;
         }
-        if (this.keyState['KeyD'] || this.keyState['ArrowRight']) {
-            this.camera.position.addScaledVector(right, this.moveSpeed);
-            this.controls.target.addScaledVector(right, this.moveSpeed);
+        if (this.keyState['KeyD']) {
+            this.spherical.theta += rotateSpeed;
         }
         if (this.keyState['KeyQ']) {
-            this.camera.position.y -= this.moveSpeed;
-            this.controls.target.y -= this.moveSpeed;
+            this.rollAngle += rollSpeed;
         }
         if (this.keyState['KeyE']) {
-            this.camera.position.y += this.moveSpeed;
-            this.controls.target.y += this.moveSpeed;
+            this.rollAngle -= rollSpeed;
         }
+        
+        this.spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, this.spherical.phi));
+        
+        const offset = new THREE.Vector3();
+        offset.setFromSpherical(this.spherical);
+        this.camera.position.copy(this.controls.target).add(offset);
+        this.camera.lookAt(this.controls.target);
+        
+        const quaternion = new THREE.Quaternion();
+        quaternion.setFromEuler(new THREE.Euler(0, 0, this.rollAngle, 'XYZ'));
+        const upOffset = new THREE.Vector3(0, 1, 0);
+        upOffset.applyQuaternion(quaternion);
+        this.camera.up.copy(upOffset);
         
         this.controls.update();
     }
@@ -576,8 +591,11 @@ class CameraRigVisualizer {
     }
 
     resetView() {
+        this.spherical = new THREE.Spherical(0.2, Math.PI / 2, 0);
+        this.rollAngle = 0;
         this.camera.position.copy(this.initialView.position);
         this.controls.target.copy(this.initialView.target);
+        this.camera.up.set(0, 1, 0);
         this.controls.update();
     }
 

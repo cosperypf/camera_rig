@@ -255,26 +255,41 @@ main {
 
 .keyboard-help {
     position: absolute;
-    bottom: 16px;
-    left: 16px;
-    background: rgba(0, 0, 0, 0.7);
+    top: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 12px 16px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 13px;
     pointer-events: none;
     z-index: 100;
+    min-width: 220px;
 }
 
 .keyboard-help strong {
     display: block;
-    margin-bottom: 8px;
-    font-size: 13px;
+    margin-bottom: 10px;
+    font-size: 14px;
     color: #fff;
+    border-bottom: 1px solid #444;
+    padding-bottom: 6px;
 }
 
-.keyboard-help span {
+.keyboard-help .key-row {
+    margin: 6px 0;
+    color: #ddd;
+}
+
+.keyboard-help .key-row span {
     display: inline-block;
-    margin-right: 12px;
-    color: #ccc;
+    background: #333;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: monospace;
+    min-width: 20px;
+    text-align: center;
+    border: 1px solid #555;
 }

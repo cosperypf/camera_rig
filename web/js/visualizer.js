@@ -300,7 +300,31 @@ class CameraRigVisualizer {
         this.coordLabels.set(camera.name, coordSprite);
         this.coordTexts.set(camera.name, coordText);
         
+        const euler = this.rotationMatrixToEuler(camera.rotation);
+        const rotText = `(R:${euler[0].toFixed(1)}° P:${euler[1].toFixed(1)}° Y:${euler[2].toFixed(1)}°)`;
+        const rotPos = new THREE.Vector3(position.x, position.y - 0.028, position.z);
+        const rotSprite = this.addCoordSprite(rotText, rotPos);
+        this.coordLabels.set(camera.name + '_rot', rotSprite);
+        this.coordTexts.set(camera.name + '_rot', rotText);
+        
         this.addFrustum(camera);
+    }
+
+    rotationMatrixToEuler(R) {
+        const sy = Math.sqrt(R[0][0] * R[0][0] + R[1][0] * R[1][0]);
+        let roll, pitch, yaw;
+        
+        if (sy > 1e-6) {
+            roll = Math.atan2(R[2][1], R[2][2]);
+            pitch = Math.atan2(-R[2][0], sy);
+            yaw = Math.atan2(R[1][0], R[0][0]);
+        } else {
+            roll = Math.atan2(-R[1][2], R[1][1]);
+            pitch = Math.atan2(-R[2][0], sy);
+            yaw = 0;
+        }
+        
+        return [roll * 180 / Math.PI, pitch * 180 / Math.PI, yaw * 180 / Math.PI];
     }
 
     addFrustum(camera) {
@@ -398,6 +422,13 @@ class CameraRigVisualizer {
         const coordSprite = this.addCoordSprite(coordText, coordPos);
         this.coordLabels.set('IMU', coordSprite);
         this.coordTexts.set('IMU', coordText);
+        
+        const euler = this.rotationMatrixToEuler(imu.rotation);
+        const rotText = `(R:${euler[0].toFixed(1)}° P:${euler[1].toFixed(1)}° Y:${euler[2].toFixed(1)}°)`;
+        const rotPos = new THREE.Vector3(position.x, position.y - 0.028, position.z);
+        const rotSprite = this.addCoordSprite(rotText, rotPos);
+        this.coordLabels.set('IMU_rot', rotSprite);
+        this.coordTexts.set('IMU_rot', rotText);
     }
 
     addVirtualDevice(device) {
@@ -431,6 +462,13 @@ class CameraRigVisualizer {
         const coordSprite = this.addCoordSprite(coordText, coordPos);
         this.coordLabels.set(device.name, coordSprite);
         this.coordTexts.set(device.name, coordText);
+        
+        const euler = this.rotationMatrixToEuler(device.rotation);
+        const rotText = `(R:${euler[0].toFixed(1)}° P:${euler[1].toFixed(1)}° Y:${euler[2].toFixed(1)}°)`;
+        const rotPos = new THREE.Vector3(position.x, position.y - 0.028, position.z);
+        const rotSprite = this.addCoordSprite(rotText, rotPos);
+        this.coordLabels.set(device.name + '_rot', rotSprite);
+        this.coordTexts.set(device.name + '_rot', rotText);
         
         if (device.type === 'camera') {
             const virtualCamera = {
@@ -469,6 +507,12 @@ class CameraRigVisualizer {
             if (coordLabel) {
                 this.scene.remove(coordLabel);
                 this.coordLabels.delete(name);
+            }
+            
+            const rotLabel = this.coordLabels.get(name + '_rot');
+            if (rotLabel) {
+                this.scene.remove(rotLabel);
+                this.coordLabels.delete(name + '_rot');
             }
             
             const frustum = this.frustumHelpers.get(name);

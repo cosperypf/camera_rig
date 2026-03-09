@@ -17,7 +17,6 @@ class UIController {
         this.setupControls();
         this.setupAddDevice();
         this.setupEditDevice();
-        this.setupCameraInfo();
     }
 
     setupFileUpload() {
@@ -334,66 +333,6 @@ class UIController {
                 }
             }
         }
-    }
-
-    setupCameraInfo() {
-        document.addEventListener('cameraSelected', (e) => {
-            const { name, data } = e.detail;
-            this.showCameraInfo(name, data);
-        });
-        
-        const clearBtn = document.getElementById('clearSelection');
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => {
-                this.visualizer.clearSelection();
-                document.getElementById('cameraInfoPanel').style.display = 'none';
-            });
-        }
-    }
-
-    showCameraInfo(name, data) {
-        const panel = document.getElementById('cameraInfoPanel');
-        if (!panel) return;
-        
-        document.getElementById('selectedCameraName').textContent = name;
-        document.getElementById('cameraModel').textContent = data.model || data.type || 'N/A';
-        
-        const pos = data.translation || [0, 0, 0];
-        document.getElementById('cameraPosition').textContent = 
-            `X: ${pos[0].toFixed(6)}, Y: ${pos[1].toFixed(6)}, Z: ${pos[2].toFixed(6)}`;
-        
-        if (data.rotation) {
-            const rot = data.rotation;
-            let rotText = '';
-            if (Array.isArray(rot[0])) {
-                rotText = rot.map(row => row.map(v => v.toFixed(4)).join(' ')).join('<br>');
-            }
-            document.getElementById('cameraRotation').innerHTML = rotText || 'N/A';
-        }
-        
-        if (data.focalLength) {
-            document.getElementById('cameraFocal').textContent = 
-                `fx=${data.focalLength[0]}, fy=${data.focalLength[1]}`;
-        }
-        
-        if (data.principalPoint) {
-            document.getElementById('cameraPrincipal').textContent = 
-                `cx=${data.principalPoint[0]}, cy=${data.principalPoint[1]}`;
-        }
-        
-        if (data.width && data.height) {
-            document.getElementById('cameraResolution').textContent = 
-                `${data.width} x ${data.height}`;
-        }
-        
-        if (data.focalLength && data.width && data.height) {
-            const fovH = 2 * Math.atan(data.width / (2 * data.focalLength[0])) * 180 / Math.PI;
-            const fovV = 2 * Math.atan(data.height / (2 * data.focalLength[1])) * 180 / Math.PI;
-            document.getElementById('cameraFovH').textContent = fovH.toFixed(2) + '°';
-            document.getElementById('cameraFovV').textContent = fovV.toFixed(2) + '°';
-        }
-        
-        panel.style.display = 'block';
     }
 }
 
